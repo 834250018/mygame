@@ -28,7 +28,7 @@ public class Game {
 
     // 整条蛇
     static LinkedList<SnakeBody> snake = new LinkedList<>();
-    public static int direction = 0;
+    public static int direction = KeyEvent.VK_RIGHT;
     public static int not_direction = 0;
     public static boolean begin = false;
     // 食物
@@ -105,7 +105,6 @@ public class Game {
         main.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                System.out.println("安乐");
 
                 if (!begin) {
                     SnakeThread snakeThread = new SnakeThread();

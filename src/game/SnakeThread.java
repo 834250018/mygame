@@ -54,7 +54,7 @@ public class SnakeThread extends Thread {
                 Game.eatFood = true;
                 Game.Integral += 1;
                 String fenshu = Integer.toString(Game.Integral);
-                Game.labelIntegral.setText("分数: "+fenshu);
+                Game.labelIntegral.setText("分数: " + fenshu);
 
                 synchronized (Game.foodThread) {
                     Game.foodThread.notifyAll();
@@ -87,7 +87,7 @@ public class SnakeThread extends Thread {
 
             try {
                 // 蛇的停顿
-                Thread.sleep(200 - Game.Integral * 10);
+                Thread.sleep((int)(200 -  Math.pow(Game.Integral, 1.177)));
             } catch (InterruptedException e) {
             }
         }

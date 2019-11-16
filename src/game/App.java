@@ -7,7 +7,7 @@ package game;
 
 public class App {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args)  {
         Game.initContainer();
         Game.initSnake();
         // 投入食物
