@@ -9,6 +9,9 @@ import java.awt.event.KeyEvent;
  * @date 2019/7/17 13:59
  */
 public class SnakeThread extends Thread {
+    public SnakeThread(String name) {
+        super(name);
+    }
 
     boolean live = true;
 

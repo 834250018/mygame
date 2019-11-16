@@ -3,7 +3,6 @@ package game;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 
@@ -27,33 +26,19 @@ public class Game {
     static JLabel labelIntegral;
 
     // 整条蛇
-    static LinkedList<SnakeBody> snake = new LinkedList<>();
-    public static int direction = KeyEvent.VK_RIGHT;
-    public static int not_direction = 0;
-    public static boolean begin = false;
+    static LinkedList<SnakeBody> snake;
+    public static int direction;
+    public static boolean begin;
     // 食物
     public static Food food;
     public static boolean eatFood;
     public static FoodThread foodThread;
+    public static SnakeThread snakeThread;
 
     /**
      * 整体页面渲染
      */
-    public static void initSnake() {
-        // 初始化蛇的身体
-        for (int i = 0; i < 8; i++) {
-            Game.snake.push(new SnakeBody(250 + i * SnakeBody.BODY_SIDE, 200));
-        }
-        for (SnakeBody snakeBody : Game.snake) {
-            Game.gamePanel.add(snakeBody);
-            Game.gamePanel.updateUI();
-        }
-    }
-
-    /**
-     * 整体页面渲染
-     */
-    public static void initContainer() {
+    public static void init() {
         // 初始化按钮
         int BUTTON_HEIGHT = 23;
         int BUTTON_WIDTH = 93;
@@ -65,7 +50,7 @@ public class Game {
         btnHelp.setBounds(464, 21, BUTTON_WIDTH, BUTTON_HEIGHT);
         btnHelp.addActionListener(new BtnListener(BtnListener.HELP_TYPE));
         btnRank.addActionListener(new BtnListener(BtnListener.RANK_TYPE));
-        btnClear.addActionListener(new BtnListener(BtnListener.CLEAR_TYPE));
+        btnClear.addActionListener(new BtnListener(BtnListener.RESET_TYPE));
         // 积分文本框
         labelIntegral = new JLabel("分数");
         labelIntegral.setBounds(120, 12, 100, 40);
@@ -96,61 +81,37 @@ public class Game {
         contentPane.add(menuPanel, BorderLayout.SOUTH);
 
         // app界面
+        if (main != null) {
+            main.dispose();
+        }
         main = new JFrame();
         main.setResizable(false);
         main.setDefaultCloseOperation(main.EXIT_ON_CLOSE);
         main.setVisible(true);
         main.setBounds(500, 250, 600, 560);
-        // 监听键盘
-        main.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-
-                if (!begin) {
-                    SnakeThread snakeThread = new SnakeThread();
-                    snakeThread.start();
-                    begin = true;
-                }
-
-                if (direction == e.getKeyCode()) {
-                    return;
-                }
-
-                int x = snake.get(0).getBounds().x;
-                int y = snake.get(0).getBounds().y;
-                int x1 = snake.get(1).getBounds().x;
-                int y1 = snake.get(1).getBounds().y;
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_UP:
-                        if (x == x1 && y - SnakeBody.BODY_SIDE == y1) {
-                            return;
-                        }
-                        direction = e.getKeyCode();
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        if (x == x1 && y + SnakeBody.BODY_SIDE == y1) {
-                            return;
-                        }
-                        direction = e.getKeyCode();
-                        break;
-                    case KeyEvent.VK_LEFT:
-                        if (x - SnakeBody.BODY_SIDE == x1 && y == y1) {
-                            return;
-                        }
-                        direction = e.getKeyCode();
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        if (x + SnakeBody.BODY_SIDE == x1 && y == y1) {
-                            return;
-                        }
-                        direction = e.getKeyCode();
-                        break;
-                }
-            }
-        });
         main.setContentPane(contentPane);
+        // 监听键盘,需要先获取焦点,否则关联不上监听器
+        main.setFocusable(true);
+        main.addKeyListener(new MyKeyAdapter());
 
         Integral = 0;
+        direction = KeyEvent.VK_RIGHT;
+        begin = false;
+
+        // 初始化蛇的身体
+        Game.snake = new LinkedList<>();
+        for (int i = 0; i < 8; i++) {
+            Game.snake.push(new SnakeBody(250 + i * SnakeBody.BODY_SIDE, 200));
+        }
+        for (SnakeBody snakeBody : Game.snake) {
+            Game.gamePanel.add(snakeBody);
+        }
+//        Game.main.repaint();
+//        System.out.println("ok");
+        // 投入食物
+        Game.food = null;
+        Game.foodThread = new FoodThread("FoodThread");
+        Game.foodThread.start();
     }
 }
 

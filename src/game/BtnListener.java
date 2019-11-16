@@ -12,7 +12,7 @@ public class BtnListener implements ActionListener {
 
     private int type;
 
-    static final int CLEAR_TYPE = 1;
+    static final int RESET_TYPE = 1;
     static final int HELP_TYPE = 2;
     static final int RANK_TYPE = 3;
 
@@ -23,7 +23,17 @@ public class BtnListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (type) {
-            case CLEAR_TYPE:
+            case RESET_TYPE:
+                Game.foodThread.stop();
+                Game.foodThread = null;
+                if (Game.snakeThread != null) {
+                    Game.snakeThread.stop();
+                    Game.snakeThread = null;
+                }
+                Game.init();
+//                Game.foodThread = new FoodThread("FoodThread");
+//                Game.main.setFocusable(true);
+//                Game.main.repaint();
                 break;
             case HELP_TYPE:
                 JOptionPane.showMessageDialog(null, "待开发", "提示ʾ", JOptionPane.INFORMATION_MESSAGE);

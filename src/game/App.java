@@ -8,11 +8,7 @@ package game;
 public class App {
 
     public static void main(String[] args)  {
-        Game.initContainer();
-        Game.initSnake();
-        // 投入食物
-        Game.foodThread = new FoodThread();
-        Game.foodThread.start();
+        Game.init();
 
     }
 
